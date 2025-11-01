@@ -9,14 +9,50 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
+
+if (!FIREBASE_API_KEY) {
+  throw new Error("FIREBASE_API_KEY is not set");
+}
+
+const FIREBASE_AUTH_DOMAIN = process.env.FIREBASE_AUTH_DOMAIN;
+if (!FIREBASE_AUTH_DOMAIN) {
+  throw new Error("FIREBASE_AUTH_DOMAIN is not set");
+}
+
+const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
+if (!FIREBASE_PROJECT_ID) {
+  throw new Error("FIREBASE_PROJECT_ID is not set");
+}
+
+const FIREBASE_STORAGE_BUCKET = process.env.FIREBASE_STORAGE_BUCKET;
+if (!FIREBASE_STORAGE_BUCKET) {
+  throw new Error("FIREBASE_STORAGE_BUCKET is not set");
+}
+
+const FIREBASE_MESSAGING_SENDER_ID = process.env.FIREBASE_MESSAGING_SENDER_ID;
+if (!FIREBASE_MESSAGING_SENDER_ID) {
+  throw new Error("FIREBASE_MESSAGING_SENDER_ID is not set");
+}
+
+const FIREBASE_APP_ID = process.env.FIREBASE_APP_ID;
+if (!FIREBASE_APP_ID) {
+  throw new Error("FIREBASE_APP_ID is not set");
+}
+
+const FIREBASE_MEASUREMENT_ID = process.env.FIREBASE_MEASUREMENT_ID;
+if (!FIREBASE_MEASUREMENT_ID) {
+  throw new Error("FIREBASE_MEASUREMENT_ID is not set");
+}
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBqt1Yri0-e9XuzmYlwe7HHU9B3HLcVZVI",
-  authDomain: "babbling-on-2023.firebaseapp.com",
-  projectId: "babbling-on-2023",
-  storageBucket: "babbling-on-2023.appspot.com",
-  messagingSenderId: "191705213962",
-  appId: "1:191705213962:web:656ad8754236dd1c4843f3",
-  measurementId: "G-GY8HKDMZ21",
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
+  measurementId: FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
