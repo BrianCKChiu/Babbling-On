@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Gesture {
+  id           String         @id @default(uuid())
+  phrase       String
+  verified     Boolean        @default(false)
+  topicId      String
+  lessonId     String?
+  topic        Topic          @relation(fields: [topicId], references: [id])
+  lesson       Lesson?        @relation(fields: [lessonId], references: [id])
+  gestureMedia GestureMedia[]
+
+  @@index([topicId])
+  @@index([lessonId])
+}
+
+model GestureMedia {
+  id        String   @id @default(uuid())
+  gestureId String
+  mediaType String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  mediaRef  String   @unique
+  gesture   Gesture  @relation(fields: [gestureId], references: [id])
+
+  @@index([gestureId])
+}
+
+model Topic {
+  id       String    @id @default(uuid())
+  name     String
+  gestures Gesture[]
+  courses  Course[]
+}
+
+model Course {
+  id             String           @id @default(uuid())
+  name           String
+  description    String
+  topicId        String
+  ownerId        String
+  topic          Topic            @relation(fields: [topicId], references: [id])
+  owner          User             @relation("coursesMade", fields: [ownerId], references: [id])
+  learners       User[]
+  lessons        Lesson[]
+  CoursesToUsers CoursesToUsers[]
+
+  @@index([ownerId])
+}
+
+model CoursesToUsers {
+  id       String @id @default(uuid())
+  userId   String
+  courseId String
+  user     User   @relation(fields: [userId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id])
+}
+
+model Lesson {
+  id          String    @id @default(uuid())
+  description String
+  name        String
+  courseId    String
+  gestures    Gesture[]
+  course      Course    @relation(fields: [courseId], references: [id])
+
+  @@index([courseId])
+}
+
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  role            String           @default("STUDENT")
+  coursesMade     Course[]         @relation("coursesMade")
+  coursesTaken    Course[]
+  selfAssessments SelfAssessment[]
+  CoursesToUsers  CoursesToUsers[]
+}
+
+model SelfAssessment {
+  score        Int
+  dateTaken    DateTime
+  assessmentId String                   @id @default(uuid())
+  userId       String
+  isPractice   Boolean
+  user         User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questions    SelfAssessmentQuestion[]
+
+  @@index([userId])
+}
+
+model CourseToUser {
+  A String
+  B String
+
+  @@unique([A, B], map: "_CourseToUser_AB_unique")
+  @@index([B], map: "_CourseToUser_B_index")
+  @@map("_CourseToUser")
+}
+
+model SelfAssessmentQuestion {
+  id           String         @id @default(uuid())
+  text         String
+  isCorrect    Boolean
+  imageUrl     String
+  assessmentId String
+  assessment   SelfAssessment @relation(fields: [assessmentId], references: [assessmentId])
+
+  @@index([assessmentId])
+}
